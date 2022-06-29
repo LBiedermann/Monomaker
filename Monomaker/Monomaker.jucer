@@ -23,6 +23,8 @@
         <FILE id="flNdsl" name="SmallKnob.h" compile="0" resource="0" file="Source/Components/SmallKnob.h"/>
       </GROUP>
     </GROUP>
+    <FILE id="W98lnN" name="MidSide.cpp" compile="1" resource="0" file="Source/MidSide.cpp"/>
+    <FILE id="jVnZJ4" name="MidSide.h" compile="0" resource="0" file="Source/MidSide.h"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>

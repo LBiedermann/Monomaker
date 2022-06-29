@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "MidSide.h"
 
 //==============================================================================
 /**
@@ -54,6 +55,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+
+    MidSide midSide;
+
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonomakerAudioProcessor)
 };
