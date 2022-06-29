@@ -19,9 +19,10 @@ MonomakerAudioProcessor::MonomakerAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
+    apvts.state.addListener(this);
 }
 
 MonomakerAudioProcessor::~MonomakerAudioProcessor()
@@ -95,6 +96,7 @@ void MonomakerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    isActive = true;
 }
 
 void MonomakerAudioProcessor::releaseResources()
@@ -131,6 +133,10 @@ bool MonomakerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 
 void MonomakerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    if (!isActive)
+        return;
+    
+
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -139,10 +145,13 @@ void MonomakerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    midSide.setStereowidthValue(1.5);
 
+    /*if (mustUpdateProcessing) {
+        mustUpdateProcessing = false;
+        updateParameters();
+    }
 
-    midSide.processStereoWidth(buffer);
+    midSide.processStereoWidth(buffer);*/
 
 
     //for (int channel = 0; channel < totalNumInputChannels; ++channel)
@@ -172,12 +181,21 @@ void MonomakerAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+
+    //ValueTree copyState = apvts.copyState();
+    //std::unique_ptr<XmlElement> xml = copyState.createXml();
+    //copyXmlToBinary(*xml.get(), destData);
 }
 
 void MonomakerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+
+    //std::unique_ptr<XmlElement> xml = getXmlFromBinary(data,
+    //    sizeInBytes);
+    //ValueTree copyState = ValueTree::fromXml(*xml.get());
+    //apvts.replaceState(copyState);
 }
 
 //==============================================================================
@@ -185,4 +203,42 @@ void MonomakerAudioProcessor::setStateInformation (const void* data, int sizeInB
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new MonomakerAudioProcessor();
+}
+//-------------------------------------------------------------------------------
+void MonomakerAudioProcessor::userChangedParameter()
+{
+    mustUpdateProcessing = true;
+}
+juce::AudioProcessorValueTreeState::ParameterLayout
+MonomakerAudioProcessor::createParameters()
+{
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
+    // Create your parameters
+    ////float value returns as a string w a mx length of 4 characters
+    //std::function<juce::String(float, int)> valueToTextFunction = [](float x, int l) { return juce::String(x, 4); };
+
+    ////value to text function
+    //std::function<float(const juce::String&)> textToValueFunction = [](const juce::String& str) {return str.getFloatValue(); };
+
+
+    //parameters.push_back(std::make_unique<juce::AudioParameterFloat >("HPF",
+    //    "High Pass Filter",
+    //    juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.3f),
+    //    20.f, "Hz",
+    //    juce::AudioProcessorParameter::genericParameter,
+    //    valueToTextFunction, textToValueFunction));
+
+    //parameters.push_back(std::make_unique<juce::AudioParameterFloat >("STE", 
+    //    "StereoWidth", 
+    //    juce::NormalisableRange<float>(0.f, 2.f), 
+    //    1.f, "", 
+    //    juce::AudioProcessorParameter::genericParameter, 
+    //    valueToTextFunction, textToValueFunction));
+
+    return { parameters.begin(), parameters.end() };
+}
+
+void MonomakerAudioProcessor::updateParameters()
+{
+    midSide.setStereowidthValue(apvts.getRawParameterValue("STE"));
 }

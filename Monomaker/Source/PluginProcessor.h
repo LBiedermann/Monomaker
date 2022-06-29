@@ -14,7 +14,7 @@
 //==============================================================================
 /**
 */
-class MonomakerAudioProcessor  : public juce::AudioProcessor
+class MonomakerAudioProcessor  : public juce::AudioProcessor, public juce::ValueTree::Listener
 {
 public:
     //==============================================================================
@@ -54,7 +54,28 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+
+    //==============================================================================
+
+    //void prepare(double sampleRate, int samplesPerBlock); //Pass Sample Rate and Buffer Size to DSP
+    void updateParameters(); //Update DSP when a user changes parameters
+    //void reset() override; //Reset DSP parameters
+
+    void userChangedParameter();
+
+   
+    juce::AudioProcessorValueTreeState apvts;
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
+
+    void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override
+    {
+        mustUpdateProcessing = true;
+    }
+
 private:
+
+    bool mustUpdateProcessing{ false };
+    bool isActive{ false };
 
     MidSide midSide;
 

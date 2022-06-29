@@ -21,8 +21,8 @@ public:
     void midSideEncode(const float& L, const float& R, float& M, float& S);
     void midSideDecode(const float& M, const float& S, float& L, float& R);
 
-    void setStereowidthValue(float newWidth) {
-        stereoWidth = newWidth;
+    void setStereowidthValue(std::atomic<float> *newWidth) {
+        stereoWidth = *newWidth;
     }
 
 
