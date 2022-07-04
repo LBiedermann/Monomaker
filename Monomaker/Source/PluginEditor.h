@@ -33,17 +33,18 @@ private:
     // access the processor object that created it.
     MonomakerAudioProcessor& audioProcessor;
 
-    Image bgImage;
+    //Image bgImage;
 
     //Slider knob1, knob2;
     //Classes for LookAndFeel
-    LargeKnob largeKnob;
-    SmallKnob smallKnob;
+    //LargeKnob largeKnob;
+    //SmallKnob smallKnob;
 
-    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> stereoWidthAttachment, hpfAttachment;
     std::unique_ptr<Slider> stereoWidthSlider, hpfSlider;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> stereoWidthAttachment, hpfAttachment;
+    
 
-    LookAndFeel_V4 lookAndFeelV4;
+    //LookAndFeel_V4 lookAndFeelV4;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonomakerAudioProcessorEditor)
 };

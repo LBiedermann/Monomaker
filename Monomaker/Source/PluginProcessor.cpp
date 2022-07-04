@@ -135,7 +135,10 @@ void MonomakerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 {
     if (!isActive)
         return;
-    
+    if (mustUpdateProcessing) {
+        mustUpdateProcessing = false;
+        updateParameters();
+    }
 
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -146,12 +149,7 @@ void MonomakerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         buffer.clear (i, 0, buffer.getNumSamples());
 
 
-    /*if (mustUpdateProcessing) {
-        mustUpdateProcessing = false;
-        updateParameters();
-    }
-
-    midSide.processStereoWidth(buffer);*/
+    midSide.processStereoWidth(buffer);
 
 
     //for (int channel = 0; channel < totalNumInputChannels; ++channel)
@@ -172,7 +170,8 @@ bool MonomakerAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* MonomakerAudioProcessor::createEditor()
 {
-    return new MonomakerAudioProcessorEditor (*this);
+    //return new MonomakerAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -214,11 +213,11 @@ MonomakerAudioProcessor::createParameters()
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
     // Create your parameters
-    ////float value returns as a string w a mx length of 4 characters
-    //std::function<juce::String(float, int)> valueToTextFunction = [](float x, int l) { return juce::String(x, 4); };
+    //float value returns as a string w a mx length of 4 characters
+    std::function<juce::String(float, int)> valueToTextFunction = [](float x, int l) { return juce::String(x, 4); };
 
-    ////value to text function
-    //std::function<float(const juce::String&)> textToValueFunction = [](const juce::String& str) {return str.getFloatValue(); };
+    //value to text function
+    std::function<float(const juce::String&)> textToValueFunction = [](const juce::String& str) {return str.getFloatValue(); };
 
 
     //parameters.push_back(std::make_unique<juce::AudioParameterFloat >("HPF",
@@ -228,17 +227,18 @@ MonomakerAudioProcessor::createParameters()
     //    juce::AudioProcessorParameter::genericParameter,
     //    valueToTextFunction, textToValueFunction));
 
-    //parameters.push_back(std::make_unique<juce::AudioParameterFloat >("STE", 
-    //    "StereoWidth", 
-    //    juce::NormalisableRange<float>(0.f, 2.f), 
-    //    1.f, "", 
-    //    juce::AudioProcessorParameter::genericParameter, 
-    //    valueToTextFunction, textToValueFunction));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat >("STE", 
+        "StereoWidth", 
+        juce::NormalisableRange<float>(0.f, 2.f), 
+        1.f, "", 
+        juce::AudioProcessorParameter::genericParameter, 
+        valueToTextFunction, textToValueFunction));
 
     return { parameters.begin(), parameters.end() };
 }
 
 void MonomakerAudioProcessor::updateParameters()
 {
-    midSide.setStereowidthValue(apvts.getRawParameterValue("STE"));
+    auto strWidth = apvts.getRawParameterValue("STE");
+    midSide.setStereowidthValue(strWidth);
 }
