@@ -24,10 +24,27 @@ public:
     void setStereowidthValue(std::atomic<float> *newWidth) {
         stereoWidth = *newWidth;
     }
+    void setSamplerate(double newSamplerate) {
+        sampleRate = newSamplerate;
+    }
 
+    void updateCutFilter(std::atomic<float>* newFrequency) {
+        //frequenzy = *newFrequency;
+        iirFilter[0].setCoefficients(juce::IIRCoefficients::makeLowPass
+        (sampleRate, newFrequency->load()));
+        iirFilter[1].setCoefficients(juce::IIRCoefficients::makeLowPass
+        (sampleRate, newFrequency->load()));
+    }
 
+    void filterReset() {
+        iirFilter[0].reset();
+        iirFilter[1].reset();
+    }
 private:
 
+    double sampleRate = 48000;
     float stereoWidth = 1.0f;
+    float frequenzy = 20.f;
+    juce::IIRFilter iirFilter[2];
 
 };

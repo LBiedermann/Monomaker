@@ -97,6 +97,11 @@ void MonomakerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    
+
+    midSide.setSamplerate(sampleRate);
+    updateParameters();
+    reset();
     isActive = true;
 }
 
@@ -242,6 +247,12 @@ MonomakerAudioProcessor::createParameters()
 
 void MonomakerAudioProcessor::updateParameters()
 {
-    auto strWidth = apvts.getRawParameterValue("STE");
-    midSide.setStereowidthValue(strWidth);
+    //auto strWidth = apvts.getRawParameterValue("STE");
+    //auto frequency = apvts.getRawParameterValue("HPF");
+    midSide.setStereowidthValue(apvts.getRawParameterValue("STE"));
+    midSide.updateCutFilter(apvts.getRawParameterValue("HPF"));
+
+}
+void MonomakerAudioProcessor::reset() {
+    midSide.filterReset();
 }

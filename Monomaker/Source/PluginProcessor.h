@@ -59,7 +59,7 @@ public:
 
     //void prepare(double sampleRate, int samplesPerBlock); //Pass Sample Rate and Buffer Size to DSP
     void updateParameters(); //Update DSP when a user changes parameters
-    //void reset() override; //Reset DSP parameters
+    void reset() override; //Reset DSP parameters
 
     void userChangedParameter();
 
