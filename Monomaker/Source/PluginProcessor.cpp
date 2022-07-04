@@ -27,6 +27,7 @@ MonomakerAudioProcessor::MonomakerAudioProcessor()
 
 MonomakerAudioProcessor::~MonomakerAudioProcessor()
 {
+    apvts.state.removeListener(this);
 }
 
 //==============================================================================
@@ -151,15 +152,6 @@ void MonomakerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
     midSide.processStereoWidth(buffer);
 
-
-    //for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    //{
-
-
-    //    //auto* channelData = buffer.getWritePointer (channel);
-
-    //    // ..do something to the data...
-    //}
 }
 
 //==============================================================================
@@ -170,8 +162,8 @@ bool MonomakerAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* MonomakerAudioProcessor::createEditor()
 {
-    //return new MonomakerAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor(*this);
+    return new MonomakerAudioProcessorEditor (*this);
+    //return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -184,6 +176,9 @@ void MonomakerAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     //ValueTree copyState = apvts.copyState();
     //std::unique_ptr<XmlElement> xml = copyState.createXml();
     //copyXmlToBinary(*xml.get(), destData);
+
+    juce::MemoryOutputStream mos(destData, true);
+    apvts.state.writeToStream(mos);
 }
 
 void MonomakerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -195,6 +190,14 @@ void MonomakerAudioProcessor::setStateInformation (const void* data, int sizeInB
     //    sizeInBytes);
     //ValueTree copyState = ValueTree::fromXml(*xml.get());
     //apvts.replaceState(copyState);
+
+    auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
+
+    if (tree.isValid())
+    {
+        apvts.replaceState(tree);
+        updateParameters();
+    }
 }
 
 //==============================================================================
@@ -214,18 +217,18 @@ MonomakerAudioProcessor::createParameters()
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
     // Create your parameters
     //float value returns as a string w a mx length of 4 characters
-    std::function<juce::String(float, int)> valueToTextFunction = [](float x, int l) { return juce::String(x, 4); };
+    std::function<juce::String(float, int)> valueToTextFunction = [](float x, int l) { return juce::String(x, 2); };
 
     //value to text function
     std::function<float(const juce::String&)> textToValueFunction = [](const juce::String& str) {return str.getFloatValue(); };
 
 
-    //parameters.push_back(std::make_unique<juce::AudioParameterFloat >("HPF",
-    //    "High Pass Filter",
-    //    juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.3f),
-    //    20.f, "Hz",
-    //    juce::AudioProcessorParameter::genericParameter,
-    //    valueToTextFunction, textToValueFunction));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat >("HPF",
+        "High Pass Filter",
+        juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.3f),
+        20.f, "Hz",
+        juce::AudioProcessorParameter::genericParameter,
+        valueToTextFunction, textToValueFunction));
 
     parameters.push_back(std::make_unique<juce::AudioParameterFloat >("STE", 
         "StereoWidth", 
