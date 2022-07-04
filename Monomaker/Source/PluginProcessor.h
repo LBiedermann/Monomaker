@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "MidSide.h"
+#include "lib/MidSide.h"
 
 //==============================================================================
 /**

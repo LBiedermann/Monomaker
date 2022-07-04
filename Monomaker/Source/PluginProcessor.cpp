@@ -224,7 +224,7 @@ MonomakerAudioProcessor::createParameters()
 
 
     parameters.push_back(std::make_unique<juce::AudioParameterFloat >("HPF",
-        "High Pass Filter",
+        "Monomaker",
         juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.3f),
         20.f, "Hz",
         juce::AudioProcessorParameter::genericParameter,
