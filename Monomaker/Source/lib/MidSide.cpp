@@ -26,6 +26,9 @@ void MidSide::processStereoWidth(float& L, float& R) {
 
     // LR --> MS
     midSideEncode(L, R, M, S);
+    
+    //monomaker
+    S = iirFilter.processSingleSampleRaw(S);
 
     //width --> 0 to 2
     S *= stereoWidth;
@@ -46,8 +49,11 @@ void MidSide::processStereoWidth(float* leftChannel, float* rightChannel, const 
 }
 
 void MidSide::processStereoWidth(juce::AudioBuffer<float> &buffer) {
+
+
     float* leftChannel = buffer.getWritePointer(0);
     float* rightChannel = buffer.getWritePointer(1);
     int N = buffer.getNumSamples();
     processStereoWidth(leftChannel, rightChannel, N);
 }
+

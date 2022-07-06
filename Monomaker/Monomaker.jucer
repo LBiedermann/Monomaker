@@ -5,8 +5,6 @@
   <MAINGROUP id="zRMb2q" name="Monomaker">
     <GROUP id="{05BC7C07-CE52-88AD-A96E-CA4617C5340D}" name="Source">
       <GROUP id="{A4455BA7-7808-DCED-A883-4A0D11D437B0}" name="lib">
-        <FILE id="zF1NML" name="EQ.cpp" compile="1" resource="0" file="Source/lib/EQ.cpp"/>
-        <FILE id="K1A4Y5" name="EQ.h" compile="0" resource="0" file="Source/lib/EQ.h"/>
         <FILE id="omVW0k" name="MidSide.cpp" compile="1" resource="0" file="Source/lib/MidSide.cpp"/>
         <FILE id="b6dvy3" name="MidSide.h" compile="0" resource="0" file="Source/lib/MidSide.h"/>
       </GROUP>
@@ -27,6 +25,10 @@
         <FILE id="eHVy9Q" name="LargeKnob.h" compile="0" resource="0" file="Source/Components/LargeKnob.h"/>
         <FILE id="HRvIep" name="SmallKnob.cpp" compile="1" resource="0" file="Source/Components/SmallKnob.cpp"/>
         <FILE id="flNdsl" name="SmallKnob.h" compile="0" resource="0" file="Source/Components/SmallKnob.h"/>
+        <FILE id="tLmBeU" name="VerticalGradientMeter.cpp" compile="1" resource="0"
+              file="Source/Components/VerticalGradientMeter.cpp"/>
+        <FILE id="za1hYW" name="VerticalGradientMeter.h" compile="0" resource="0"
+              file="Source/Components/VerticalGradientMeter.h"/>
       </GROUP>
     </GROUP>
   </MAINGROUP>

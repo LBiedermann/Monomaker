@@ -8,6 +8,8 @@
   ==============================================================================
 */
 #include <JuceHeader.h>
+//#include "EQ.h"
+
 #pragma once
 
 class MidSide {
@@ -24,27 +26,27 @@ public:
     void setStereowidthValue(std::atomic<float> *newWidth) {
         stereoWidth = *newWidth;
     }
-    void setSamplerate(double newSamplerate) {
-        sampleRate = newSamplerate;
-    }
+
 
     void updateCutFilter(std::atomic<float>* newFrequency) {
-        //frequenzy = *newFrequency;
-        iirFilter[0].setCoefficients(juce::IIRCoefficients::makeLowPass
-        (sampleRate, newFrequency->load()));
-        iirFilter[1].setCoefficients(juce::IIRCoefficients::makeLowPass
+        iirFilter.setCoefficients(juce::IIRCoefficients::makeHighPass
         (sampleRate, newFrequency->load()));
     }
 
     void filterReset() {
-        iirFilter[0].reset();
-        iirFilter[1].reset();
+        iirFilter.reset();
     }
+    void setSamplerate(double newSamplerate) {
+        sampleRate = newSamplerate;
+    }
+
+
 private:
 
-    double sampleRate = 48000;
+    
     float stereoWidth = 1.0f;
+    
+    double sampleRate = 48000;
     float frequenzy = 20.f;
-    juce::IIRFilter iirFilter[2];
-
+    juce::IIRFilter iirFilter;
 };

@@ -1,11 +1,11 @@
 /*
   ==============================================================================
 
-    EQ.cpp
-    Created: 4 Jul 2022 12:47:00pm
+    VerticalGradientMeter.cpp
+    Created: 6 Jul 2022 3:14:02pm
     Author:  Lukas
 
   ==============================================================================
 */
 
-#include "EQ.h"
+#include "VerticalGradientMeter.h"
