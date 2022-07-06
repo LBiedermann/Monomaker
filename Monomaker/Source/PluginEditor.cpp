@@ -11,13 +11,18 @@
 
 //==============================================================================
 MonomakerAudioProcessorEditor::MonomakerAudioProcessorEditor (MonomakerAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p),
+    verticalGradientMeterM([&]() {return audioProcessor.getMidSide().getRMSLevelMid(); }),
+    verticalGradientMeterS([&]() {return audioProcessor.getMidSide().getRMSLevelSide(); })
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
 
     setSize (420, 420);
     bgImage = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
+
+    addAndMakeVisible(verticalGradientMeterM);
+    addAndMakeVisible(verticalGradientMeterS);
 
     addRotaries();
 }
@@ -37,6 +42,9 @@ void MonomakerAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+
+    verticalGradientMeterM.setBounds(355, 200, 15, 200);
+    verticalGradientMeterM.setBounds(375, 200, 15, 200);
 }
 //
 

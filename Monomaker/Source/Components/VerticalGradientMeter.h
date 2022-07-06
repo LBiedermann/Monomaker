@@ -9,9 +9,10 @@
 */
 
 #pragma once
-using namespace juce;
+
 
 #include <JuceHeader.h>
+using namespace juce;
 namespace Gui {
 
     class VerticalGradientMeter : public Component, public Timer {
@@ -36,15 +37,8 @@ namespace Gui {
         }
 
         void resized() override {
-
-            auto bounds = getLocalBounds().toFloat();
-            ColourGradient gradient{
-                Colours::green,
-                bounds.getBottomLeft(),
-                Colours::red,
-                bounds.getTopLeft(),
-                false
-            };
+            const auto bounds = getLocalBounds().toFloat();
+            gradient = ColourGradient{ Colours::green, bounds.getBottomLeft(), Colours::red, bounds.getTopLeft(), false };
             gradient.addColour(0.5, Colours::yellow);
         }
 

@@ -10,8 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "Components/LargeKnob.h"
-#include "Components/SmallKnob.h"
+#include "Components/VerticalGradientMeter.h"
 
 //==============================================================================
 /**
@@ -42,7 +41,7 @@ private:
     std::unique_ptr<Slider> stereoWidthSlider, hpfSlider;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> stereoWidthAttachment, hpfAttachment;
     
-
+    Gui::VerticalGradientMeter verticalGradientMeterM, verticalGradientMeterS;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonomakerAudioProcessorEditor)

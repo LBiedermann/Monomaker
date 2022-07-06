@@ -34,10 +34,17 @@ void MidSide::processStereoWidth(float& L, float& R) {
     S *= stereoWidth;
     M *= (2.f - stereoWidth);
 
+    //store Sum for RMS
+    sumMid += (M * 0.5f) * (M * 0.5f);
+    sumSide += (S * 0.5f) * (S * 0.5f);
+
     midSideDecode(M, S, L, R);
 }
 
 void MidSide::processStereoWidth(float* leftChannel, float* rightChannel, const int N) {
+    sumMid = 0.f;
+    sumSide = 0.f;
+
     for (int n = 0; n < N; n++)
     {
         float L = leftChannel[n];
@@ -46,6 +53,8 @@ void MidSide::processStereoWidth(float* leftChannel, float* rightChannel, const 
         leftChannel[n] = L;
         rightChannel[n] = R;
     }
+
+    calcRMSLevel(N);
 }
 
 void MidSide::processStereoWidth(juce::AudioBuffer<float> &buffer) {
@@ -55,5 +64,27 @@ void MidSide::processStereoWidth(juce::AudioBuffer<float> &buffer) {
     float* rightChannel = buffer.getWritePointer(1);
     int N = buffer.getNumSamples();
     processStereoWidth(leftChannel, rightChannel, N);
+}
+
+void MidSide::calcRMSLevel(int N) {
+
+    rmsLevelMid.skip(N);
+    rmsLevelMid.skip(N);
+    {
+        const auto value = juce::Decibels::gainToDecibels(std::sqrt(sumMid / N));
+        if (value < rmsLevelMid.getCurrentValue())
+            rmsLevelMid.setTargetValue(value);
+        else
+            rmsLevelMid.setCurrentAndTargetValue(value);
+    }
+
+    {
+        const auto value = juce::Decibels::gainToDecibels(std::sqrt(sumSide / N));
+        if (value < rmsLevelSide.getCurrentValue())
+            rmsLevelSide.setTargetValue(value);
+        else
+            rmsLevelSide.setCurrentAndTargetValue(value);
+    }
+
 }
 

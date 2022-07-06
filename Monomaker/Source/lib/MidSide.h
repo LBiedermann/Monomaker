@@ -23,23 +23,37 @@ public:
     void midSideEncode(const float& L, const float& R, float& M, float& S);
     void midSideDecode(const float& M, const float& S, float& L, float& R);
 
-    void setStereowidthValue(std::atomic<float> *newWidth) {
+    void setStereowidthValue(std::atomic<float>* newWidth) {
         stereoWidth = *newWidth;
     }
-
 
     void updateCutFilter(std::atomic<float>* newFrequency) {
         iirFilter.setCoefficients(juce::IIRCoefficients::makeHighPass
         (sampleRate, newFrequency->load()));
     }
 
-    void filterReset() {
+    void reset() {
         iirFilter.reset();
+        rmsLevelMid.reset(sampleRate, 0.5);
+        rmsLevelMid.reset(sampleRate, 0.5);
+
+        rmsLevelMid.setCurrentAndTargetValue(-100.f);
+        rmsLevelSide.setCurrentAndTargetValue(-100.f);
     }
     void setSamplerate(double newSamplerate) {
         sampleRate = newSamplerate;
     }
 
+
+    void calcRMSLevel(int N);
+
+
+    float getRMSLevelMid() {
+        return rmsLevelMid.getCurrentValue();
+    }
+    float getRMSLevelSide() {
+        return rmsLevelSide.getCurrentValue();
+    }
 
 private:
 
@@ -49,4 +63,7 @@ private:
     double sampleRate = 48000;
     float frequenzy = 20.f;
     juce::IIRFilter iirFilter;
+
+    float sumMid, sumSide;
+    juce::LinearSmoothedValue<float> rmsLevelMid, rmsLevelSide;
 };

@@ -254,5 +254,5 @@ void MonomakerAudioProcessor::updateParameters()
 
 }
 void MonomakerAudioProcessor::reset() {
-    midSide.filterReset();
+    midSide.reset();
 }
