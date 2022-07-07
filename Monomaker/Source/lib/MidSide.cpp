@@ -26,17 +26,28 @@ void MidSide::processStereoWidth(float& L, float& R) {
 
     // LR --> MS
     midSideEncode(L, R, M, S);
+
+    if (midMute)
+        M = 0.f;
+    else{
+        //width --> 0 to 2
+        M *= (2.f - stereoWidth);
+        //store Sum for RMS
+        sumMid += M * M;
+    }
     
-    //monomaker
-    S = iirFilter.processSingleSampleRaw(S);
+    if (sideMute) 
+        S = 0.f;
+    else{
+        //monomaker
+        S = iirFilter.processSingleSampleRaw(S);
 
-    //width --> 0 to 2
-    S *= stereoWidth;
-    M *= (2.f - stereoWidth);
+        //width --> 0 to 2
+        S *= stereoWidth;
 
-    //store Sum for RMS
-    sumMid += (M * 0.5f) * (M * 0.5f);
-    sumSide += (S * 0.5f) * (S * 0.5f);
+        //store Sum for RMS
+        sumSide += S * S;
+    }
 
     midSideDecode(M, S, L, R);
 }
@@ -59,7 +70,6 @@ void MidSide::processStereoWidth(float* leftChannel, float* rightChannel, const 
 
 void MidSide::processStereoWidth(juce::AudioBuffer<float> &buffer) {
 
-
     float* leftChannel = buffer.getWritePointer(0);
     float* rightChannel = buffer.getWritePointer(1);
     int N = buffer.getNumSamples();
@@ -69,21 +79,21 @@ void MidSide::processStereoWidth(juce::AudioBuffer<float> &buffer) {
 void MidSide::calcRMSLevel(int N) {
 
     rmsLevelMid.skip(N);
-    rmsLevelMid.skip(N);
+    rmsLevelSide.skip(N);
     {
-        const auto value = juce::Decibels::gainToDecibels(std::sqrt(sumMid / N));
-        if (value < rmsLevelMid.getCurrentValue())
-            rmsLevelMid.setTargetValue(value);
+        const auto midValue = juce::Decibels::gainToDecibels(std::sqrt(sumMid / N));
+        if (midValue < rmsLevelMid.getCurrentValue())
+            rmsLevelMid.setTargetValue(midValue);
         else
-            rmsLevelMid.setCurrentAndTargetValue(value);
+            rmsLevelMid.setCurrentAndTargetValue(midValue);
     }
 
     {
-        const auto value = juce::Decibels::gainToDecibels(std::sqrt(sumSide / N));
-        if (value < rmsLevelSide.getCurrentValue())
-            rmsLevelSide.setTargetValue(value);
+        const auto sideValue = juce::Decibels::gainToDecibels(std::sqrt(sumSide / N));
+        if (sideValue < rmsLevelSide.getCurrentValue())
+            rmsLevelSide.setTargetValue(sideValue);
         else
-            rmsLevelSide.setCurrentAndTargetValue(value);
+            rmsLevelSide.setCurrentAndTargetValue(sideValue);
     }
 
 }

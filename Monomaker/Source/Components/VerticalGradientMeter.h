@@ -22,6 +22,9 @@ namespace Gui {
         VerticalGradientMeter(std::function<float()>&& valueFunction) : valueSupplier(std::move(valueFunction)) {
             startTimer(30);
         }
+        ~VerticalGradientMeter() {
+            stopTimer();
+        }
 
         void paint(Graphics& g) override {
             const auto level = valueSupplier();
@@ -32,7 +35,7 @@ namespace Gui {
 
             g.setGradientFill(gradient);
             const auto scaledY =
-                jmap(level, -60.f, 6.f, 0.f, static_cast<float>(getHeight()));
+                jmap(level, -60.f, 0.f, 0.f, static_cast<float>(getHeight()));
             g.fillRect(bounds.removeFromBottom(scaledY));
         }
 

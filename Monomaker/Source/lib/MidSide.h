@@ -10,6 +10,7 @@
 #include <JuceHeader.h>
 //#include "EQ.h"
 
+
 #pragma once
 
 class MidSide {
@@ -35,10 +36,12 @@ public:
     void reset() {
         iirFilter.reset();
         rmsLevelMid.reset(sampleRate, 0.5);
-        rmsLevelMid.reset(sampleRate, 0.5);
+        rmsLevelSide.reset(sampleRate, 0.5);
 
         rmsLevelMid.setCurrentAndTargetValue(-100.f);
         rmsLevelSide.setCurrentAndTargetValue(-100.f);
+        sumMid = 0.f, 
+        sumSide = 0.f;
     }
     void setSamplerate(double newSamplerate) {
         sampleRate = newSamplerate;
@@ -55,6 +58,14 @@ public:
         return rmsLevelSide.getCurrentValue();
     }
 
+    void setMidState(bool midState) {
+        midMute = midState;
+    }
+
+    void setSideState(bool sideState) {
+        sideMute = sideState;
+    }
+
 private:
 
     
@@ -64,6 +75,8 @@ private:
     float frequenzy = 20.f;
     juce::IIRFilter iirFilter;
 
-    float sumMid, sumSide;
+    float sumMid = 0.f, sumSide = 0.f;
     juce::LinearSmoothedValue<float> rmsLevelMid, rmsLevelSide;
+
+    bool midMute = false, sideMute = false;
 };

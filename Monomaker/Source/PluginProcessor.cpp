@@ -154,7 +154,7 @@ void MonomakerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-
+    
     midSide.processStereoWidth(buffer);
 
 }
@@ -242,6 +242,8 @@ MonomakerAudioProcessor::createParameters()
         juce::AudioProcessorParameter::genericParameter, 
         valueToTextFunction, textToValueFunction));
 
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("MM", "MidMute", false));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("SM", "SideMute", false));
     return { parameters.begin(), parameters.end() };
 }
 
@@ -251,6 +253,11 @@ void MonomakerAudioProcessor::updateParameters()
     //auto frequency = apvts.getRawParameterValue("HPF");
     midSide.setStereowidthValue(apvts.getRawParameterValue("STE"));
     midSide.updateCutFilter(apvts.getRawParameterValue("HPF"));
+    bool midBtn = *apvts.getRawParameterValue("MM");
+    bool sideBtn = *apvts.getRawParameterValue("SM");
+
+    midSide.setMidState(midBtn);
+    midSide.setSideState(sideBtn);
 
 }
 void MonomakerAudioProcessor::reset() {

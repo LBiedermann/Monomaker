@@ -26,7 +26,13 @@ public:
     void resized() override;
     void addRotaries();
 
+    bool getMidMuteState() {
+        return midMute.getToggleState();
+    }
 
+    bool getSideMuteState() {
+        return sideMute.getToggleState();
+    }
 private:
 
     MonomakerAudioProcessor& audioProcessor;
@@ -42,6 +48,9 @@ private:
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> stereoWidthAttachment, hpfAttachment;
     
     Gui::VerticalGradientMeter verticalGradientMeterM, verticalGradientMeterS;
+
+    TextButton midMute, sideMute;
+    std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> midMuteAttachment, sideMuteAttachment;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonomakerAudioProcessorEditor)
