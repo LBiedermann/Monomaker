@@ -19,7 +19,8 @@ MonomakerAudioProcessorEditor::MonomakerAudioProcessorEditor (MonomakerAudioProc
     // editor's size to whatever you need it to be.
 
     setSize (420, 420);
-    //bgImage = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
+    bgImage = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
+    grill = ImageCache::getFromMemory(BinaryData::raster_png, BinaryData::raster_pngSize);
 
     addAndMakeVisible(verticalGradientMeterM);
     addAndMakeVisible(verticalGradientMeterS);
@@ -52,20 +53,22 @@ MonomakerAudioProcessorEditor::~MonomakerAudioProcessorEditor()
 void MonomakerAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    //g.drawImageAt(bgImage, 0, 0);
-    g.fillAll(Colours::darkgrey);
+    g.drawImage(bgImage, getLocalBounds().toFloat());
 }
-
+void MonomakerAudioProcessorEditor::paintOverChildren(juce::Graphics& g)
+{
+    g.drawImageAt(grill, 0, 0);
+}
 void MonomakerAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
-    verticalGradientMeterM.setBounds(280, 60, 30, 300);
-    verticalGradientMeterS.setBounds(330, 60, 30, 300);
+    verticalGradientMeterM.setBounds(281, 60, 30, 300);
+    verticalGradientMeterS.setBounds(331, 60, 30, 300);
 
-    midMute.setBounds(275, 30, 40, 20);
-    sideMute.setBounds(325, 30, 40, 20);
+    midMute.setBounds(276, 30, 40, 20);
+    sideMute.setBounds(326, 30, 40, 20);
 
 }
 //
@@ -73,17 +76,17 @@ void MonomakerAudioProcessorEditor::resized()
 
 void MonomakerAudioProcessorEditor::addRotaries() {
     //Hpf Slider
-    hpfSlider = std::make_unique<Slider>(Slider::SliderStyle::RotaryHorizontalVerticalDrag,Slider::TextBoxAbove);
-    hpfSlider->setBounds(30, 30, 200, 200);
-    //hpfSlider->setLookAndFeel(&largeKnob);
+    hpfSlider = std::make_unique<Slider>(Slider::SliderStyle::RotaryHorizontalVerticalDrag, Slider::NoTextBox);
+    hpfSlider->setBounds(42, 50.4, 243, 214);
+    hpfSlider->setLookAndFeel(&largeKnob);
     addAndMakeVisible(hpfSlider.get());
     hpfAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPF", *hpfSlider);
 
 
     //StereoWidth Slider
-    stereoWidthSlider = std::make_unique<Slider>(Slider::SliderStyle::RotaryHorizontalVerticalDrag,Slider::TextBoxAbove);
-    stereoWidthSlider->setBounds(55, 230, 150, 150);
-    //stereoWidthSlider->setLookAndFeel(&largeKnob); 
+    stereoWidthSlider = std::make_unique<Slider>(Slider::SliderStyle::RotaryHorizontalVerticalDrag, Slider::NoTextBox );
+    stereoWidthSlider->setBounds(63, 243.6, 189, 155);
+    stereoWidthSlider->setLookAndFeel(&smallKnob); 
     addAndMakeVisible(stereoWidthSlider.get());
     stereoWidthAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "STE", *stereoWidthSlider);
 }
