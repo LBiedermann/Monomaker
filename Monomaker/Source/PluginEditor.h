@@ -40,19 +40,21 @@ private:
 
     MonomakerAudioProcessor& audioProcessor;
 
-    Image bgImage, grill;
+    Image bgImage, grill, midImage, midLightImage, sideImage, sideLightImage;
 
     //Slider knob1, knob2;
     //Classes for LookAndFeel
     LargeKnob largeKnob;
     SmallKnob smallKnob;
 
+
+
     std::unique_ptr<Slider> stereoWidthSlider, hpfSlider;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> stereoWidthAttachment, hpfAttachment;
     
     Gui::VerticalGradientMeter verticalGradientMeterM, verticalGradientMeterS;
 
-    TextButton midMute, sideMute;
+    ImageButton midMute, sideMute;
     std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> midMuteAttachment, sideMuteAttachment;
 
 

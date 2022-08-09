@@ -21,23 +21,25 @@ MonomakerAudioProcessorEditor::MonomakerAudioProcessorEditor (MonomakerAudioProc
     setSize (420, 420);
     bgImage = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
     grill = ImageCache::getFromMemory(BinaryData::raster_png, BinaryData::raster_pngSize);
+    midImage = ImageCache::getFromMemory(BinaryData::MID_btn_png, BinaryData::MID_btn_pngSize);
+    midLightImage = ImageCache::getFromMemory(BinaryData::MID_Light_png, BinaryData::MID_Light_pngSize);
+    sideImage = ImageCache::getFromMemory(BinaryData::SIDE_btn_png, BinaryData::SIDE_btn_pngSize);
+    sideLightImage = ImageCache::getFromMemory(BinaryData::SIDE_Light_png, BinaryData::SIDE_Light_pngSize);
 
     addAndMakeVisible(verticalGradientMeterM);
     addAndMakeVisible(verticalGradientMeterS);
 
     addAndMakeVisible(midMute);
-    midMute.setButtonText("Mid");
+    midMute.setImages(false,false,false,midImage,1.0f,{}, midImage, 1.0f,{},midLightImage,1.0f,{},{});
     midMute.setClickingTogglesState(true);
-    midMute.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::red);
-    //midMute.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::dimgrey);
+    midMute.setMouseCursor(MouseCursor::PointingHandCursor);
     audioProcessor.getMidSide().setMidState(&midMute);
     midMuteAttachment = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "MM", midMute);
 
     addAndMakeVisible(sideMute);
-    sideMute.setButtonText("Side");
     sideMute.setClickingTogglesState(true);
-    sideMute.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::red);
-    //sideMute.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::dimgrey);
+    sideMute.setImages(true, false, false, sideImage, 1.0f, {}, sideImage, 1.0f, {}, sideLightImage, 1.0f, {}, {});
+    sideMute.setMouseCursor(MouseCursor::PointingHandCursor);
     audioProcessor.getMidSide().setSideState(&sideMute);
     sideMuteAttachment = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "SM", sideMute);
 
@@ -67,18 +69,21 @@ void MonomakerAudioProcessorEditor::resized()
     verticalGradientMeterM.setBounds(281, 60, 30, 300);
     verticalGradientMeterS.setBounds(331, 60, 30, 300);
 
-    midMute.setBounds(276, 30, 40, 20);
-    sideMute.setBounds(326, 30, 40, 20);
+    midMute.setBounds(273, 28, 46, 25);
+    sideMute.setBounds(323, 28, 46, 25);
 
 }
 //
 
 
 void MonomakerAudioProcessorEditor::addRotaries() {
+
+
     //Hpf Slider
     hpfSlider = std::make_unique<Slider>(Slider::SliderStyle::RotaryHorizontalVerticalDrag, Slider::NoTextBox);
     hpfSlider->setBounds(42, 50.4, 243, 214);
     hpfSlider->setLookAndFeel(&largeKnob);
+    hpfSlider->setMouseCursor(MouseCursor::PointingHandCursor);
     addAndMakeVisible(hpfSlider.get());
     hpfAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPF", *hpfSlider);
 
@@ -87,6 +92,7 @@ void MonomakerAudioProcessorEditor::addRotaries() {
     stereoWidthSlider = std::make_unique<Slider>(Slider::SliderStyle::RotaryHorizontalVerticalDrag, Slider::NoTextBox );
     stereoWidthSlider->setBounds(63, 243.6, 189, 155);
     stereoWidthSlider->setLookAndFeel(&smallKnob); 
+    stereoWidthSlider->setMouseCursor(MouseCursor::PointingHandCursor);
     addAndMakeVisible(stereoWidthSlider.get());
     stereoWidthAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "STE", *stereoWidthSlider);
 }

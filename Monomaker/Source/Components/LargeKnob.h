@@ -10,6 +10,8 @@ public:
     Image sprite = ImageCache::getFromMemory(BinaryData::knob_big_png, BinaryData::knob_big_pngSize);
     double customSkew = 0.3;
     void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos, const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider);
+
+ 
 };
 
 #endif /* LARGEKNOB_H_INCLUDED */
