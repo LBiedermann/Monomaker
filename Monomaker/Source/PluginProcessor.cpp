@@ -249,8 +249,7 @@ MonomakerAudioProcessor::createParameters()
 
 void MonomakerAudioProcessor::updateParameters()
 {
-    //auto strWidth = apvts.getRawParameterValue("STE");
-    //auto frequency = apvts.getRawParameterValue("HPF");
+   
     midSide.setStereowidthValue(apvts.getRawParameterValue("STE"));
     midSide.updateCutFilter(apvts.getRawParameterValue("HPF"));
     bool midBtn = *apvts.getRawParameterValue("MM");

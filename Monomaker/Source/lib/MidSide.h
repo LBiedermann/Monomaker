@@ -29,8 +29,14 @@ public:
     }
 
     void updateCutFilter(std::atomic<float>* newFrequency) {
-        iirFilter.setCoefficients(juce::IIRCoefficients::makeHighPass
-        (sampleRate, newFrequency->load()));
+       
+        //setHpfValue(newFrequency->load());
+        //while (currentHpfValue.isSmoothing())
+        //{
+            iirFilter.setCoefficients(juce::IIRCoefficients::makeHighPass
+            (sampleRate, newFrequency->load()));
+        //    DBG(currentHpfValue.getNextValue());
+        //}
     }
 
     void reset() {
@@ -42,6 +48,8 @@ public:
         rmsLevelSide.setCurrentAndTargetValue(-100.f);
         sumMid = 0.f, 
         sumSide = 0.f;
+
+        //currentHpfValue.reset(sampleRate, 0.5);
     }
     void setSamplerate(double newSamplerate) {
         sampleRate = newSamplerate;
@@ -55,6 +63,7 @@ public:
         return rmsLevelMid.getCurrentValue();
     }
     float getRMSLevelSide() {
+        
         return rmsLevelSide.getCurrentValue();
     }
 
@@ -66,17 +75,26 @@ public:
         sideMute = sideState;
     }
 
+    //void setHpfValue(float value) {
+
+
+    //    if (value < currentHpfValue.getCurrentValue())
+    //        currentHpfValue.setTargetValue(value);
+    //    else
+    //        currentHpfValue.setCurrentAndTargetValue(value);
+    //}
+
 private:
 
     
     float stereoWidth = 1.0f;
     
     double sampleRate = 48000;
-    float frequenzy = 20.f;
+    //float frequenzy = 20.f;
     juce::IIRFilter iirFilter;
 
     float sumMid = 0.f, sumSide = 0.f;
-    juce::LinearSmoothedValue<float> rmsLevelMid, rmsLevelSide;
+    juce::LinearSmoothedValue<float> rmsLevelMid, rmsLevelSide; // currentHpfValue;
 
     bool midMute = false, sideMute = false;
 };

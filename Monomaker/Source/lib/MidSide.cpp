@@ -26,7 +26,7 @@ void MidSide::processStereoWidth(float& L, float& R) {
 
     // LR --> MS
     midSideEncode(L, R, M, S);
-
+    float x = S;
     if (midMute)
         M = 0.f;
     else{
@@ -40,7 +40,8 @@ void MidSide::processStereoWidth(float& L, float& R) {
         S = 0.f;
     else{
         //monomaker
-        S = iirFilter.processSingleSampleRaw(S);
+        //S = iirFilter.processSingleSampleRaw(S);
+        iirFilter.processSamples(&S, 1);
 
         //width --> 0 to 2
         S *= stereoWidth;
