@@ -11,7 +11,7 @@
 #include "MidSide.h"
 
 void MidSide::midSideEncode(const float& L, const float& R, float& M, float& S) {
-    M = L + R;
+    M = L + R; 
     S = L - R;
 }
 
@@ -31,7 +31,8 @@ void MidSide::processStereoWidth(float& L, float& R) {
         M = 0.f;
     else{
         //width --> 0 to 2
-        M *= (2.f - stereoWidth);
+        if(stereoWidth>=1)
+            M *= (2.f - stereoWidth);
         //store Sum for RMS
         sumMid += M * M;
     }
@@ -40,11 +41,12 @@ void MidSide::processStereoWidth(float& L, float& R) {
         S = 0.f;
     else{
         //monomaker
-        //S = iirFilter.processSingleSampleRaw(S);
+
         iirFilter.processSamples(&S, 1);
 
         //width --> 0 to 2
-        S *= stereoWidth;
+        if(stereoWidth <=1)
+            S *= stereoWidth;
 
         //store Sum for RMS
         sumSide += S * S;

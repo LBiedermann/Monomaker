@@ -80,7 +80,7 @@ void MonomakerAudioProcessorEditor::addRotaries() {
 
 
     //Hpf Slider
-    hpfSlider = std::make_unique<Slider>(Slider::SliderStyle::RotaryHorizontalVerticalDrag, Slider::TextBoxAbove);
+    hpfSlider = std::make_unique<Slider>(Slider::SliderStyle::RotaryHorizontalVerticalDrag, Slider::NoTextBox);
     hpfSlider->setBounds(42, 50.4, 243, 214);
     hpfSlider->setLookAndFeel(&largeKnob);
     hpfSlider->setMouseCursor(MouseCursor::PointingHandCursor);
